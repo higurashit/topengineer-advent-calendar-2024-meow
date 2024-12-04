@@ -159,6 +159,9 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       DefinitionS3Location: ../statemachine/getMeowAdvicesFlow.asl.json
+      DefinitionSubstitutions:
+        LambdaFunctionMeowAdviceArn: !GetAtt LambdaFunctionMeowAdvice.Arn
+        LambdaFunctionFindCatsGroupArn: !GetAtt LambdaFunctionFindCatsGroup.Arn
       EncryptionConfiguration:
         Type: AWS_OWNED_KEY
       LoggingConfiguration:
