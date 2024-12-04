@@ -6,7 +6,7 @@ Resources:
   LambdaFunctionMeowAdvice:
     UpdateReplacePolicy: Retain
     Type: AWS::Lambda::Function
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       MemorySize: 128
       Description: ''
@@ -40,7 +40,7 @@ Resources:
   IAMRoleLFMeowAdvice:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::Role
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       Path: /service-role/
       ManagedPolicyArns:
@@ -57,7 +57,7 @@ Resources:
   IAMManagedPolicyLFMeowAdvice:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::ManagedPolicy
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       ManagedPolicyName: IAMManagedPolicyLFMeowAdvice
       Path: /service-role/
@@ -82,7 +82,7 @@ Resources:
   LambdaFunctionFindCatsGroup:
     UpdateReplacePolicy: Retain
     Type: AWS::Lambda::Function
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       MemorySize: 128
       Description: ''
@@ -111,7 +111,7 @@ Resources:
   IAMRoleLFFindCatsGroup:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::Role
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       Path: /service-role/
       ManagedPolicyArns:
@@ -128,7 +128,7 @@ Resources:
   IAMManagedPolicyLFFindCatsGroup:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::ManagedPolicy
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       ManagedPolicyName: IAMManagedPolicyLFFindCatsGroup
       Path: /service-role/
@@ -156,7 +156,7 @@ Resources:
   StateMachineGetMeowAdvicesFlow:
     UpdateReplacePolicy: Retain
     Type: AWS::StepFunctions::StateMachine
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       DefinitionS3Location: ../statemachine/getMeowAdvicesFlow.asl.json
       DefinitionSubstitutions:
@@ -178,7 +178,7 @@ Resources:
   IAMRoleSFGetMeowAdvicesFlow:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::Role
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       Path: /service-role/
       ManagedPolicyArns:
@@ -197,7 +197,7 @@ Resources:
   IAMManagedPolicyExecuteFunction:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::ManagedPolicy
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       ManagedPolicyName: IAMManagedPolicyExecuteFunction
       Path: /service-role/
@@ -224,7 +224,7 @@ Resources:
   IAMManagedPolicyXray:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::ManagedPolicy
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       ManagedPolicyName: IAMManagedPolicyXray
       Path: /service-role/
@@ -251,7 +251,7 @@ Resources:
   SchedulerExecGetMeowAdvicesFlow:
     UpdateReplacePolicy: Retain
     Type: AWS::Scheduler::Schedule
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       GroupName: default
       ScheduleExpression: cron(0 0 17 12 ? *)
@@ -271,7 +271,7 @@ Resources:
   IAMRoleEBScheduler:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::Role
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       Path: /service-role/
       ManagedPolicyArns:
@@ -292,7 +292,7 @@ Resources:
   IAMManagedPolicyEBScheduler:
     UpdateReplacePolicy: Retain
     Type: AWS::IAM::ManagedPolicy
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       ManagedPolicyName: IAMManagedPolicyEBScheduler
       Path: /service-role/
