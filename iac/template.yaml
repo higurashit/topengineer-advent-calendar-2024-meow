@@ -1,0 +1,376 @@
+Metadata:
+  AWSToolsMetrics:
+    IaC_Generator: arn:aws:cloudformation:ap-northeast-1:026144752061:generatedTemplate/371d873f-cf7c-4639-834e-8b566389f00a
+Parameters:
+  LambdaFunction00findGroupOfCats00iBnNKCodeImageUriekRcQ:
+    NoEcho: 'true'
+    Type: String
+    Description: URI of a [container
+      image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html) in
+      the Amazon ECR registry.
+  LambdaFunction00myHappyBirthday00dOxYNCodeS3ObjectVersionpPzZf:
+    NoEcho: 'true'
+    Type: String
+    Description: For versioned objects, the version of the deployment package object to use.
+  LambdaFunction00findGroupOfCats00iBnNKCodeS3ObjectVersion5P8Zh:
+    NoEcho: 'true'
+    Type: String
+    Description: For versioned objects, the version of the deployment package object to use.
+  LambdaFunction00myHappyBirthday00dOxYNCodeZipFilerrveQ:
+    NoEcho: 'true'
+    Type: String
+    Description: |-
+      (Node.js and Python) The source code of your Lambda function. If you include your function source inline with this parameter, CFN places it in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html). This zip file cannot exceed 4MB. For the ``Handler`` property, the first part of the handler identifier must be ``index``. For example, ``index.handler``.
+        For JSON, you must escape quotes and special characters such as newline (``\n``) with a backslash.
+       If you specify a function that interacts with an AWS CloudFormation custom resource, you don't have to write your own functions to send responses to the custom resource that invoked the function. AWS CloudFormation provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html)) that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html) for details.
+  LambdaFunction00findGroupOfCats00iBnNKCodeZipFile7BA4z:
+    NoEcho: 'true'
+    Type: String
+    Description: |-
+      (Node.js and Python) The source code of your Lambda function. If you include your function source inline with this parameter, CFN places it in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html). This zip file cannot exceed 4MB. For the ``Handler`` property, the first part of the handler identifier must be ``index``. For example, ``index.handler``.
+        For JSON, you must escape quotes and special characters such as newline (``\n``) with a backslash.
+       If you specify a function that interacts with an AWS CloudFormation custom resource, you don't have to write your own functions to send responses to the custom resource that invoked the function. AWS CloudFormation provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html)) that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html) for details.
+  LambdaFunction00myHappyBirthday00dOxYNCodeImageUri2ZsOt:
+    NoEcho: 'true'
+    Type: String
+    Description: URI of a [container
+      image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html) in
+      the Amazon ECR registry.
+  LambdaFunction00myHappyBirthday00dOxYNCodeS3Bucket3nuaH:
+    NoEcho: 'true'
+    Type: String
+    Description:
+      An Amazon S3 bucket in the same AWS-Region as your function. The
+      bucket can be in a different AWS-account.
+  LambdaFunction00myHappyBirthday00dOxYNCodeS3Keysz8BH:
+    NoEcho: 'true'
+    Type: String
+    Description: The Amazon S3 key of the deployment package.
+  LambdaFunction00findGroupOfCats00iBnNKCodeS3Keynm39I:
+    NoEcho: 'true'
+    Type: String
+    Description: The Amazon S3 key of the deployment package.
+  LambdaFunction00myHappyBirthday00dOxYNCodeSourceKMSKeyArnd8QPF:
+    NoEcho: 'true'
+    Type: String
+    Description: Value of write only property Code/SourceKMSKeyArn of resource
+      LambdaFunction00myHappyBirthday00dOxYN.
+  LambdaFunction00findGroupOfCats00iBnNKCodeS3BucketlerA8:
+    NoEcho: 'true'
+    Type: String
+    Description:
+      An Amazon S3 bucket in the same AWS-Region as your function. The
+      bucket can be in a different AWS-account.
+  LambdaFunction00findGroupOfCats00iBnNKCodeSourceKMSKeyArnV37bY:
+    NoEcho: 'true'
+    Type: String
+    Description: Value of write only property Code/SourceKMSKeyArn of resource
+      LambdaFunction00findGroupOfCats00iBnNK.
+Resources:
+  IAMManagedPolicy00policyserviceroleLambdaInvokeScopedAccessPolicy254c65e8423b44bf8b54bfe3d34424f600T674R:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Retain
+    Properties:
+      ManagedPolicyName: LambdaInvokeScopedAccessPolicy-254c65e8-423b-44bf-8b54-bfe3d34424f6
+      Path: /service-role/
+      Description: Allow AWS Step Functions to invoke Lambda functions on your behalf
+      Groups: []
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Resource:
+              - arn:aws:lambda:ap-northeast-1:026144752061:function:myHappyBirthday:*
+              - arn:aws:lambda:ap-northeast-1:026144752061:function:findGroupOfCats:*
+            Action:
+              - lambda:InvokeFunction
+            Effect: Allow
+          - Resource:
+              - arn:aws:lambda:ap-northeast-1:026144752061:function:myHappyBirthday
+              - arn:aws:lambda:ap-northeast-1:026144752061:function:findGroupOfCats
+            Action:
+              - lambda:InvokeFunction
+            Effect: Allow
+      Roles:
+        - StepFunctions-MyHappyBirthdayFlow-role-ec559o14i
+      Users: []
+  LambdaFunction00myHappyBirthday00dOxYN:
+    UpdateReplacePolicy: Retain
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
+    Properties:
+      MemorySize: 128
+      Description: ''
+      TracingConfig:
+        Mode: PassThrough
+      Timeout: 10
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+      Handler: lambda_function.lambda_handler
+      Code:
+        SourceKMSKeyArn: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeSourceKMSKeyArnd8QPF
+        S3ObjectVersion: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeS3ObjectVersionpPzZf
+        S3Bucket: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeS3Bucket3nuaH
+        ZipFile: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeZipFilerrveQ
+        ImageUri: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeImageUri2ZsOt
+        S3Key: !Ref LambdaFunction00myHappyBirthday00dOxYNCodeS3Keysz8BH
+      Role: !GetAtt IAMRole00myHappyBirthdayrolenge3yqsx00fFdHR.Arn
+      FileSystemConfigs: []
+      FunctionName: myHappyBirthday
+      Runtime: python3.12
+      PackageType: Zip
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: /aws/lambda/myHappyBirthday
+      RecursiveLoop: Terminate
+      Environment:
+        Variables:
+          DEEPL_AUTH_KEY: efabad1f-dd41-4661-8517-167388189ce6:fx
+          LINE_USER_ID: U54ac958e763cec8287ed5cf94f1b7919
+          GEMINI_API_KEY: AIzaSyCPMWwyK59lPAlwDmZO9szwviYSOi2xSds
+          LINE_ACCESS_TOKEN: UyPTbev9A9fuEgFudBnePwo49lSP0A5TImKy58IbTXmoqDmgbFZc3YE7eBVN0azjfbVnkFaC6j2cDCiBo1Q/dKH8ieRaE7XlnTcXEAklzsZh6xGDHOpCiAe57RdUGGvzzO55a2r2TvghT+xqizSv1AdB04t89/1O/w1cDnyilFU=
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+        - x86_64
+  LambdaFunction00findGroupOfCats00iBnNK:
+    UpdateReplacePolicy: Retain
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
+    Properties:
+      MemorySize: 128
+      Description: ''
+      TracingConfig:
+        Mode: PassThrough
+      Timeout: 3
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+      Handler: lambda_function.lambda_handler
+      Code:
+        SourceKMSKeyArn: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeSourceKMSKeyArnV37bY
+        S3ObjectVersion: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeS3ObjectVersion5P8Zh
+        S3Bucket: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeS3BucketlerA8
+        ZipFile: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeZipFile7BA4z
+        ImageUri: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeImageUriekRcQ
+        S3Key: !Ref LambdaFunction00findGroupOfCats00iBnNKCodeS3Keynm39I
+      Role: !GetAtt IAMRole00findGroupOfCatsrolezdzogd1m00QZaEH.Arn
+      FileSystemConfigs: []
+      FunctionName: findGroupOfCats
+      Runtime: python3.12
+      PackageType: Zip
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: /aws/lambda/findGroupOfCats
+      RecursiveLoop: Terminate
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+        - x86_64
+  IAMRole00StepFunctionsMyHappyBirthdayFlowroleec559o14i00pcW04:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    Properties:
+      Path: /service-role/
+      ManagedPolicyArns:
+        - !Ref IAMManagedPolicy00policyserviceroleLambdaInvokeScopedAccessPolicy254c65e8423b44bf8b54bfe3d34424f600T674R
+        - !Ref IAMManagedPolicy00policyserviceroleXRayAccessPolicye495b27219ba40468c9c134c3db013d2001jWdC
+      MaxSessionDuration: 3600
+      RoleName: StepFunctions-MyHappyBirthdayFlow-role-ec559o14i
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+  IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRoleb342bcb169c04a908ccd110a0bb0bf9a00fFkqs:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Retain
+    Properties:
+      ManagedPolicyName: AWSLambdaBasicExecutionRole-b342bcb1-69c0-4a90-8ccd-110a0bb0bf9a
+      Path: /service-role/
+      Description: ''
+      Groups: []
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Resource: arn:aws:logs:ap-northeast-1:026144752061:*
+            Action: logs:CreateLogGroup
+            Effect: Allow
+          - Resource:
+              - arn:aws:logs:ap-northeast-1:026144752061:log-group:/aws/lambda/findGroupOfCats:*
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+      Roles:
+        - findGroupOfCats-role-zdzogd1m
+      Users: []
+  IAMRole00AmazonEventBridgeSchedulerSFN5ca89650e9008UC8x:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    Properties:
+      Path: /service-role/
+      ManagedPolicyArns:
+        - !Ref IAMManagedPolicy00policyserviceroleAmazonEventBridgeSchedulerExecutionPolicy69746feabcc14139bc77c961d738eb5a00ydPXu
+      MaxSessionDuration: 3600
+      RoleName: Amazon_EventBridge_Scheduler_SFN_5ca89650e9
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Condition:
+              StringEquals:
+                aws:SourceAccount: '026144752061'
+            Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+  IAMRole00findGroupOfCatsrolezdzogd1m00QZaEH:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    Properties:
+      Path: /service-role/
+      ManagedPolicyArns:
+        - !Ref IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRoleb342bcb169c04a908ccd110a0bb0bf9a00fFkqs
+      MaxSessionDuration: 3600
+      RoleName: findGroupOfCats-role-zdzogd1m
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+  IAMManagedPolicy00policyserviceroleAmazonEventBridgeSchedulerExecutionPolicy69746feabcc14139bc77c961d738eb5a00ydPXu:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Retain
+    Properties:
+      ManagedPolicyName: Amazon-EventBridge-Scheduler-Execution-Policy-69746fea-bcc1-4139-bc77-c961d738eb5a
+      Path: /service-role/
+      Description: ''
+      Groups: []
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Resource:
+              - arn:aws:states:ap-northeast-1:026144752061:stateMachine:MyHappyBirthdayFlow
+            Action:
+              - states:StartExecution
+            Effect: Allow
+      Roles:
+        - Amazon_EventBridge_Scheduler_SFN_5ca89650e9
+      Users: []
+  IAMManagedPolicy00policyserviceroleXRayAccessPolicye495b27219ba40468c9c134c3db013d2001jWdC:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Retain
+    Properties:
+      ManagedPolicyName: XRayAccessPolicy-e495b272-19ba-4046-8c9c-134c3db013d2
+      Path: /service-role/
+      Description: Allow AWS Step Functions to call X-Ray daemon on your behalf
+      Groups: []
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Resource:
+              - '*'
+            Action:
+              - xray:PutTraceSegments
+              - xray:PutTelemetryRecords
+              - xray:GetSamplingRules
+              - xray:GetSamplingTargets
+            Effect: Allow
+      Roles:
+        - StepFunctions-MyHappyBirthdayFlow-role-ec559o14i
+      Users: []
+  StepFunctionsStateMachine00stateMachineMyHappyBirthdayFlow00benJf:
+    UpdateReplacePolicy: Retain
+    Type: AWS::StepFunctions::StateMachine
+    DeletionPolicy: Retain
+    Properties:
+      DefinitionString: '{"Comment":"A description of my state
+        machine","StartAt":"???????","States":{"???????":{"Type":"Task","Resource":"arn:aws:states:::lambda:invoke","Output":"{%
+        $states.result.Payload
+        %}","Arguments":{"FunctionName":"arn:aws:lambda:ap-northeast-1:026144752061:function:findGroupOfCats:$LATEST","Payload":"{%
+        $states.input
+        %}"},"Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException","Lambda.TooManyRequestsException"],"IntervalSeconds":1,"MaxAttempts":3,"BackoffRate":2,"JitterStrategy":"FULL"}],"Next":"???????"},"???????":{"Type":"Map","ItemProcessor":{"ProcessorConfig":{"Mode":"INLINE"},"StartAt":"????????????????????","States":{"????????????????????":{"Type":"Task","Resource":"arn:aws:states:::lambda:invoke","Output":"{%
+        $states.result.Payload
+        %}","Arguments":{"FunctionName":"arn:aws:lambda:ap-northeast-1:026144752061:function:myHappyBirthday:$LATEST"},"Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException","Lambda.TooManyRequestsException"],"IntervalSeconds":1,"MaxAttempts":3,"BackoffRate":2,"JitterStrategy":"FULL"}],"End":true}}},"End":true,"Items":"{%
+        $states.input.myCats
+        %}","MaxConcurrency":3}},"QueryLanguage":"JSONata"}'
+      EncryptionConfiguration:
+        Type: AWS_OWNED_KEY
+      LoggingConfiguration:
+        IncludeExecutionData: false
+        Level: 'OFF'
+      StateMachineName: MyHappyBirthdayFlow
+      RoleArn: !GetAtt IAMRole00StepFunctionsMyHappyBirthdayFlowroleec559o14i00pcW04.Arn
+      Tags: []
+      StateMachineType: STANDARD
+      TracingConfiguration:
+        Enabled: false
+  IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRole0e2d4936dd644e239c842e1a7d5d16fa00deTB2:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Retain
+    Properties:
+      ManagedPolicyName: AWSLambdaBasicExecutionRole-0e2d4936-dd64-4e23-9c84-2e1a7d5d16fa
+      Path: /service-role/
+      Description: ''
+      Groups: []
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Resource: arn:aws:logs:ap-northeast-1:026144752061:*
+            Action: logs:CreateLogGroup
+            Effect: Allow
+          - Resource:
+              - arn:aws:logs:ap-northeast-1:026144752061:log-group:/aws/lambda/myHappyBirthday:*
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+      Roles:
+        - myHappyBirthday-role-nge3yqsx
+      Users: []
+  IAMRole00myHappyBirthdayrolenge3yqsx00fFdHR:
+    UpdateReplacePolicy: Retain
+    Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    Properties:
+      Path: /service-role/
+      ManagedPolicyArns:
+        - !Ref IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRole0e2d4936dd644e239c842e1a7d5d16fa00deTB2
+      MaxSessionDuration: 3600
+      RoleName: myHappyBirthday-role-nge3yqsx
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+  SchedulerSchedule00myHappyBirthDay00kZ5cR:
+    UpdateReplacePolicy: Retain
+    Type: AWS::Scheduler::Schedule
+    DeletionPolicy: Retain
+    Properties:
+      GroupName: default
+      ScheduleExpression: at(2024-12-03T02:03:00)
+      Target:
+        Arn: !Ref StepFunctionsStateMachine00stateMachineMyHappyBirthdayFlow00benJf
+        RetryPolicy:
+          MaximumEventAgeInSeconds: 86400
+          MaximumRetryAttempts: 185
+        RoleArn: !GetAtt IAMRole00AmazonEventBridgeSchedulerSFN5ca89650e9008UC8x.Arn
+      Description: cats celebrate my birthday
+      State: ENABLED
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      ScheduleExpressionTimezone: Asia/Tokyo
+      Name: myHappyBirthDay
