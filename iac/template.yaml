@@ -302,7 +302,7 @@ Resources:
         Version: '2012-10-17'
         Statement:
           - Resource:
-              - !Ref SchedulerExecGetMeowAdvicesFlow
+              - !Sub arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:GetMeowAdvicesFlow
             Action:
               - states:StartExecution
             Effect: Allow
