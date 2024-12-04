@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Start package...
+  build:
+    commands:
+      - echo Packageing...
+      - aws cloudformation package
+        --template-file ./iac/template.yaml
+        --s3-bucket siruko-cloudformation-templetes
+        --output-template-file packaged-template.yaml
+      - ls -l packaged-template.yaml
+artifacts:
+  files:
+    - packaged-template.yaml
