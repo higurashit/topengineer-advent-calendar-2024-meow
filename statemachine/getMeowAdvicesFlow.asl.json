@@ -7,7 +7,7 @@
       "Resource": "arn:aws:states:::lambda:invoke",
       "Output": "{% $states.result.Payload %}",
       "Arguments": {
-        "FunctionName": "{$LambdaFunctionFindCatsGroupArn}",
+        "FunctionName": "${LambdaFunctionFindCatsGroupArn}",
         "Payload": "{% $states.input %}"
       },
       "Retry": [
@@ -39,7 +39,7 @@
             "Resource": "arn:aws:states:::lambda:invoke",
             "Output": "{% $states.result.Payload %}",
             "Arguments": {
-              "FunctionName": "{$LambdaFunctionMeowAdviceArn}"
+              "FunctionName": "${LambdaFunctionMeowAdviceArn}"
             },
             "Retry": [
               {
