@@ -27,10 +27,10 @@ Resources:
         LogGroup: /aws/lambda/meowAdvice
       Environment:
         Variables:
-          DEEPL_AUTH_KEY: '{{resolve:ssm-secure:/Test/DEEPL_AUTH_KEY}}'
-          LINE_USER_ID: '{{resolve:ssm-secure:/Test/LINE_USER_ID}}'
-          GEMINI_API_KEY: '{{resolve:ssm-secure:/Test/GEMINI_API_KEY}}'
-          LINE_ACCESS_TOKEN: '{{resolve:ssm-secure:/Test/LINE_ACCESS_TOKEN}}'
+          DEEPL_AUTH_KEY: '{{resolve:ssm:/Test/DEEPL_AUTH_KEY}}'
+          LINE_USER_ID: '{{resolve:ssm:/Test/LINE_USER_ID}}'
+          GEMINI_API_KEY: '{{resolve:ssm:/Test/GEMINI_API_KEY}}'
+          LINE_ACCESS_TOKEN: '{{resolve:ssm:/Test/LINE_ACCESS_TOKEN}}'
       EphemeralStorage:
         Size: 512
       Architectures:
