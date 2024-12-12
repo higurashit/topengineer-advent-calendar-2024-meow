@@ -5,7 +5,7 @@ Resources:
   CodePipelineArtifactsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub GetMeowAdvicesArtifactBucket-${AWS::AccountId}
+      BucketName: !Sub get-meow-advices-artifact-bucket-${AWS::AccountId}
 
   ################################
   # CodePipeline
@@ -93,11 +93,14 @@ Resources:
                 Owner: AWS
                 Version: 1
                 Provider: Manual
+              Configuration:
+                ExternalEntityLink: !Sub https://${AWS::Region}.console.aws.amazon.com/cloudformation/home?region=${AWS::Region}#/stacks/changesets?filteringText=GetMeowAdvicesAppStack
+                CustomData: レビュー用URLから変更セットを確認し、リリース承認をお願いします。
 
         ################################
         # Execte CloudFormation changeset
         ################################
-        - Name: Deploy
+        - Name: ExecuteChangeset
           Actions:
             - Name: ExecuteChangeset
               ActionTypeId:
@@ -119,7 +122,7 @@ Resources:
     Properties:
       Name: GetMeowAdvicesBuild
       Source:
-        BuildSpec: ./iac/buildspec.yml
+        BuildSpec: ./iac/buildspec.yaml
         InsecureSsl: false
         Type: CODEPIPELINE
       Artifacts:
@@ -194,6 +197,20 @@ Resources:
                   - /
                   - - !GetAtt CodePipelineArtifactsBucket.Arn
                     - '*'
+              - Effect: Allow
+                Action: codestar-connections:*
+                Resource: !Sub arn:aws:codeconnections:${AWS::Region}:${AWS::AccountId}:connection/6a7eb867-8d4f-400e-b124-494d8874c175
+              - Effect: Allow
+                Action: codebuild:*
+                Resource: !Sub arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/GetMeowAdvices*
+              - Effect: Allow
+                Action: cloudformation:*
+                Resource:
+                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack
+                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/GetMeowAdvicesAppPipeline*
 
   # CreateChangeset
   CreateChangesetRole:
@@ -214,13 +231,14 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action:
-                  - cloudformation:CreateChangeSet
-                Resource:
-                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
+                Action: cloudformation:CreateChangeSet
+                Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
               - Effect: Allow
                 Action: s3:*
                 Resource: '*'
+              - Effect: Allow
+                Action: ssm:GetParameters
+                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/Test/*
 
   # ExecuteChangesetRole
   ExecuteChangesetRole:
