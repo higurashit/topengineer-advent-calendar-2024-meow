@@ -1,0 +1,303 @@
+Resources:
+  ################################
+  # S3 Bucket
+  ################################
+  CodePipelineArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub GetMeowAdvicesArtifactBucket-${AWS::AccountId}
+
+  ################################
+  # CodePipeline
+  ################################
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location: !Ref CodePipelineArtifactsBucket
+        Type: S3
+      ExecutionMode: QUEUED
+      Name: GetMeowAdvicesAppPipeline
+      PipelineType: V2
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      Stages:
+        ################################
+        # Get Source from GitHub
+        ################################
+        - Name: Source
+          Actions:
+            - Name: CodeConnections
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeStarSourceConnection
+                Version: 1
+              Configuration:
+                ConnectionArn: !Sub arn:aws:codeconnections:${AWS::Region}:${AWS::AccountId}:connection/6a7eb867-8d4f-400e-b124-494d8874c175
+                FullRepositoryId: higurashit/topengineer-advent-calendar-2024-meow
+                BranchName: main
+              OutputArtifacts:
+                - Name: SourceAtf
+
+        ################################
+        # Package CloudFormation template
+        ################################
+        - Name: Build
+          Actions:
+            - Name: BuildByCodeBuild
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref CodeBuildProjectForPackageCfnTemplate
+              InputArtifacts:
+                - Name: SourceAtf
+              OutputArtifacts:
+                - Name: BuildAtf
+              Region: !Ref AWS::Region
+              Namespace: BuildByCodeBuild
+
+        ################################
+        # Create CloudFormation changeset
+        ################################
+        - Name: CreateChangeset
+          Actions:
+            - InputArtifacts:
+                - Name: BuildAtf
+              Name: CreateChangeset
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              OutputArtifacts:
+                - Name: BdOutput
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                ChangeSetName: GetMeowAdvicesAppStackChangeSet
+                RoleArn: !GetAtt CreateChangesetRole.Arn
+                Capabilities: CAPABILITY_NAMED_IAM
+                StackName: GetMeowAdvicesAppStack
+                TemplatePath: BuildAtf::packaged-template.yaml
+
+        ################################
+        # Manual Approbal
+        ################################
+        - Name: Approval
+          Actions:
+            - Name: ApproveExecuteChangeset
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Version: 1
+                Provider: Manual
+
+        ################################
+        # Execte CloudFormation changeset
+        ################################
+        - Name: Deploy
+          Actions:
+            - Name: ExecuteChangeset
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CHANGE_SET_EXECUTE
+                ChangeSetName: GetMeowAdvicesAppStackChangeSet
+                RoleArn: !GetAtt ExecuteChangesetRole.Arn
+                StackName: GetMeowAdvicesAppStack
+
+  ################################
+  # CodeBuild
+  ################################
+  CodeBuildProjectForPackageCfnTemplate:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: GetMeowAdvicesBuild
+      Source:
+        BuildSpec: ./iac/buildspec.yml
+        InsecureSsl: false
+        Type: CODEPIPELINE
+      Artifacts:
+        EncryptionDisabled: false
+        Name: CodeBuildProjectForPackageCfnTemplate
+        Packaging: NONE
+        Type: CODEPIPELINE
+      Cache:
+        Type: NO_CACHE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux-x86_64-standard:5.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: false
+        Type: LINUX_CONTAINER
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      TimeoutInMinutes: 15
+      QueuedTimeoutInMinutes: 480
+      EncryptionKey: !Sub arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/s3
+      BadgeEnabled: false
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+        S3Logs:
+          Status: DISABLED
+          EncryptionDisabled: false
+
+  ################################
+  # IAM Role
+  ################################
+  # CodePipeline
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetMeowAdvicesAppPipelineRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+      Path: /
+      Policies:
+        - PolicyName: GetMeowAdvicesAppPipelineRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:Abort*
+                  - s3:DeleteObject*
+                  - s3:GetBucket*
+                  - s3:GetObject*
+                  - s3:List*
+                  - s3:PutObject
+                  - s3:PutObjectLegalHold
+                  - s3:PutObjectRetention
+                  - s3:PutObjectTagging
+                  - s3:PutObjectVersionTagging
+                Resource:
+                  - !GetAtt CodePipelineArtifactsBucket.Arn
+                  - !Join
+                    - /
+                    - - !GetAtt CodePipelineArtifactsBucket.Arn
+                      - '*'
+              - Effect: Allow
+                Action:
+                  - s3:PutObjectAcl
+                  - s3:PutObjectVersionAcl
+                Resource: !Join
+                  - /
+                  - - !GetAtt CodePipelineArtifactsBucket.Arn
+                    - '*'
+
+  # CreateChangeset
+  CreateChangesetRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetMeowAdvicesAppPipelineCreateChangesetRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+      Path: /
+      Policies:
+        - PolicyName: GetMeowAdvicesAppPipelineCreateChangesetRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                Resource:
+                  - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
+              - Effect: Allow
+                Action: s3:*
+                Resource: '*'
+
+  # ExecuteChangesetRole
+  ExecuteChangesetRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetMeowAdvicesAppPipelineExecuteChangesetRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+      Path: /
+      Policies:
+        - PolicyName: GetMeowAdvicesAppPipelineExecuteChangesetRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource: '*'
+                Action:
+                  - iam:*
+              - Effect: Allow
+                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*
+                Action:
+                  - iam:PassRole
+              - Effect: Allow
+                Resource: '*'
+                Action:
+                  - states:*
+                  - logs:*
+                  - cloudwatch:*
+                  - lambda:*
+                  - events:*
+                  - s3:*
+
+  # CodeBuild
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetMeowAdvicesBuildRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+      Path: /
+      Policies:
+        - PolicyName: GetMeowAdvicesBuildRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchPutCodeCoverages
+                  - codebuild:BatchPutTestCases
+                  - codebuild:CreateReport
+                  - codebuild:CreateReportGroup
+                  - codebuild:UpdateReport
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/GetMeowAdvicesBuild-*
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/GetMeowAdvicesBuild
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/GetMeowAdvicesBuild:*
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                  - codepipeline:*
+                  - iam:PassRole
+                  - s3:*
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*
