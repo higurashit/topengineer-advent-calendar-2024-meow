@@ -32,9 +32,9 @@
         "ProcessorConfig": {
           "Mode": "INLINE"
         },
-        "StartAt": "それぞれの猫にお祝いの言葉を言ってもらう",
+        "StartAt": "それぞれの猫にアドバイスをもらう",
         "States": {
-          "それぞれの猫にお祝いの言葉を言ってもらう": {
+          "それぞれの猫にアドバイスをもらう": {
             "Type": "Task",
             "Resource": "arn:aws:states:::lambda:invoke",
             "Output": "{% $states.result.Payload %}",

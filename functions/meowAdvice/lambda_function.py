@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     admeowce_jp = translate_meow(admeowce_jp)
 
     # LINEに送信
-    happyMeowthdayToLine(imeowge, f'{admeowce}\n{admeowce_jp}')
+    postAdmeowceToLine(imeowge, f'{admeowce}\n{admeowce_jp}')
 
 def getImeowge():
     _url = 'https://api.thecatapi.com/v1/images/search'
@@ -60,8 +60,8 @@ def translate_meow(text):
     ret = meow["candidates"][0]["content"]["parts"][0]["text"]
     return ret.rstrip("\n")
 
-def happyMeowthdayToLine(imeowge, meowssage):
-    _msg = f'Happy Meowthday!!\n{meowssage}'
+def postAdmeowceToLine(imeowge, meowssage):
+    _msg = f'あなたにアドバイスをあげるにゃん。\n{meowssage}'
     _url = 'https://api.line.me/v2/bot/message/push'
     _data = json.dumps({
         "to": _env["LINE_USER_ID"]
