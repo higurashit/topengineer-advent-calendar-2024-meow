@@ -2,5 +2,5 @@ import random
 
 def lambda_handler(event, context):
     return {
-        "my_cats": list(range(random.randrange(10)))
+        "my_cats": list(range(random.randrange(6) + 1))
     }

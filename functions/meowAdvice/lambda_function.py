@@ -83,7 +83,6 @@ def post_admeowce_to_line(imeowge, meowssage):
       "Content-type": "application/json; charset=UTF-8",
       "Authorization": "Bearer " + _env["LINE_ACCESS_TOKEN"]
     }
-    # print(f'_url, _data, _header => {_url}, {_data}, {_header}')
     send_request(_url, _data, _header)
 
 def send_request(_url, _data=None, _header={}):
