@@ -23,7 +23,7 @@ def lambda_handler(event, context):
 
 def get_name(event):
     default_cat_name = 'Cat'
-    return event.key('name', default_cat_name)
+    return event.get('name', default_cat_name)
 
 def get_imeowge():
     _url = 'https://api.thecatapi.com/v1/images/search'
