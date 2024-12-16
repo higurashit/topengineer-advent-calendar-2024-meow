@@ -12,7 +12,7 @@ def lambda_handler(event, context):
     
     for cat in range(my_cats_length):
         name = pick_name(names, my_cats)
-        my_cats.append(name)
+        my_cats.append({'name': name})
 
     return {
         "my_cats": my_cats

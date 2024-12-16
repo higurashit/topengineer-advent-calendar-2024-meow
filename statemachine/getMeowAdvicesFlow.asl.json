@@ -40,7 +40,8 @@
             "Resource": "arn:aws:states:::lambda:invoke",
             "Output": "{% $states.result.Payload %}",
             "Arguments": {
-              "FunctionName": "${LambdaFunctionMeowAdviceArn}"
+              "FunctionName": "${LambdaFunctionMeowAdviceArn}",
+              "Payload": "{% $states.input %}"
             },
             "Retry": [
               {
