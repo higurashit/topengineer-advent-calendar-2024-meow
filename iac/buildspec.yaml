@@ -4,6 +4,7 @@ phases:
   install:
     commands:
       - echo Start package...
+      - echo ${bucket}
   build:
     commands:
       - echo Packageing...
@@ -12,6 +13,7 @@ phases:
         --s3-bucket ${bucket}
         --output-template-file packaged-template.yaml
       - ls -l packaged-template.yaml
+      - cat packaged-template.yaml | grep ${bucket}
 artifacts:
   files:
     - packaged-template.yaml
