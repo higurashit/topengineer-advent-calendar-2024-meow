@@ -284,16 +284,6 @@ Resources:
               - Effect: Allow
                 Action: cloudformation:ExecuteChangeSet
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
-              # - Effect: Allow
-              #   Resource: '*'
-              #   Action:
-              #     - iam:*
-              #     - states:*
-              #     - logs:*
-              #     - cloudwatch:*
-              #     - lambda:*
-              #     - events:*
-              #     - s3:*
 
   # CodeBuild
   CodeBuildRole:

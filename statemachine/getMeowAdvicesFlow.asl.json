@@ -6,6 +6,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Output": "{% $states.result.Payload %}",
+      "ResultPath": "$.findCatsResult",
       "Arguments": {
         "FunctionName": "${LambdaFunctionFindCatsGroupArn}",
         "Payload": "{% $states.input %}"
