@@ -247,11 +247,21 @@ Resources:
                 Action: ssm:GetParameters
                 Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/Test/*
               - Effect: Allow
-                Action: iam:GetRole
+                Action:
+                  - iam:*
+                  - lambda:*
+                  - states:*
+                  - scheduler:*
                 Resource: '*'
               - Effect: Allow
-                Action: lambda:UpdateFunctionCode
-                Resource: '*'
+                Action:
+                  - s3:GetObject*
+                Resource:
+                  - !GetAtt CodePipelineArtifactsBucket.Arn
+                  - !Join
+                    - /
+                    - - !GetAtt CodePipelineArtifactsBucket.Arn
+                      - '*'
 
   # ExecuteChangesetRole
   ExecuteChangesetRole:
@@ -274,16 +284,16 @@ Resources:
               - Effect: Allow
                 Action: cloudformation:ExecuteChangeSet
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
-              - Effect: Allow
-                Resource: '*'
-                Action:
-                  - iam:*
-                  - states:*
-                  - logs:*
-                  - cloudwatch:*
-                  - lambda:*
-                  - events:*
-                  - s3:*
+              # - Effect: Allow
+              #   Resource: '*'
+              #   Action:
+              #     - iam:*
+              #     - states:*
+              #     - logs:*
+              #     - cloudwatch:*
+              #     - lambda:*
+              #     - events:*
+              #     - s3:*
 
   # CodeBuild
   CodeBuildRole:
