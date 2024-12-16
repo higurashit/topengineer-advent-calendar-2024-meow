@@ -60,7 +60,7 @@
         }
       },
       "End": true,
-      "Items": "{% $states.input.myCats %}",
+      "Items": "{% $states.input.my_cats %}",
       "MaxConcurrency": 3
     }
   },

@@ -223,7 +223,9 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service: cloudformation.amazonaws.com
+              Service:
+                - codepipeline.amazonaws.com
+                - cloudformation.amazonaws.com
       Path: /
       Policies:
         - PolicyName: GetMeowAdvicesAppPipelineCreateChangesetRolePolicy
@@ -233,12 +235,21 @@ Resources:
               - Effect: Allow
                 Action: cloudformation:CreateChangeSet
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
-              - Effect: Allow
-                Action: s3:*
-                Resource: '*'
+              # - Effect: Allow
+              #   Action:
+              #     - s3:*
+              #     - lambda:*
+              #     - states:*
+              #     - events:*
+              #   Resource: '*'
               - Effect: Allow
                 Action: ssm:GetParameters
                 Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/Test/*
+              # - Effect: Allow
+              #   Action: iam:*
+              #   Resource:
+              #     - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFMeowAdvice
+              #     - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFFindCatsGroup
 
   # ExecuteChangesetRole
   ExecuteChangesetRole:
@@ -251,7 +262,7 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service: cloudformation.amazonaws.com
+              Service: codepipeline.amazonaws.com
       Path: /
       Policies:
         - PolicyName: GetMeowAdvicesAppPipelineExecuteChangesetRolePolicy
@@ -259,16 +270,12 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
+                Action: cloudformation:ExecuteChangeSet
+                Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
+              - Effect: Allow
                 Resource: '*'
                 Action:
                   - iam:*
-              - Effect: Allow
-                Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/*
-                Action:
-                  - iam:PassRole
-              - Effect: Allow
-                Resource: '*'
-                Action:
                   - states:*
                   - logs:*
                   - cloudwatch:*
