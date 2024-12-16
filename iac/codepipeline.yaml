@@ -51,6 +51,14 @@ Resources:
                 Provider: CodeBuild
                 Version: 1
               Configuration:
+                EnvironmentVariables: !Sub
+                  - |
+                    [{
+                      "name": "bucket",
+                      "value": "${CodePipelineArtifactsBucket}",
+                      "type": "PLAINTEXT"
+                    }]
+                  - Env: !Ref CodePipelineArtifactsBucket
                 ProjectName: !Ref CodeBuildProjectForPackageCfnTemplate
               InputArtifacts:
                 - Name: SourceAtf
@@ -209,7 +217,9 @@ Resources:
                   - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack
                   - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
               - Effect: Allow
-                Action: iam:PassRole
+                Action:
+                  - iam:PassRole
+                  - iam:GetRole
                 Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/GetMeowAdvicesAppPipeline*
 
   # CreateChangeset
@@ -233,21 +243,15 @@ Resources:
               - Effect: Allow
                 Action: cloudformation:CreateChangeSet
                 Resource: !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/GetMeowAdvicesAppStack/*
-              # - Effect: Allow
-              #   Action:
-              #     - s3:*
-              #     - lambda:*
-              #     - states:*
-              #     - events:*
-              #   Resource: '*'
               - Effect: Allow
                 Action: ssm:GetParameters
                 Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/Test/*
               - Effect: Allow
                 Action: iam:GetRole
-                Resource:
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFMeowAdvice
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFFindCatsGroup
+                Resource: '*'
+              - Effect: Allow
+                Action: lambda:UpdateFunctionCode
+                Resource: '*'
 
   # ExecuteChangesetRole
   ExecuteChangesetRole:

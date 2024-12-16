@@ -9,7 +9,7 @@ phases:
       - echo Packageing...
       - aws cloudformation package
         --template-file ./iac/template.yaml
-        --s3-bucket siruko-cloudformation-templetes
+        --s3-bucket ${bucket}
         --output-template-file packaged-template.yaml
       - ls -l packaged-template.yaml
 artifacts:
