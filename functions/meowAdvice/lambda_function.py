@@ -4,6 +4,8 @@ import os
 _env = os.environ
 
 def lambda_handler(event, context):
+    name = get_name(event)
+
     # 猫画像取得
     imeowge = get_imeowge()
 
@@ -13,7 +15,12 @@ def lambda_handler(event, context):
     admeowce_jp = translate_meow(admeowce_jp)
 
     # LINEに送信
-    post_admeowce_to_line(imeowge, f'{admeowce}\n{admeowce_jp}')
+    post_admeowce_to_line(imeowge, f'{admeowce}\n{name}「{admeowce_jp}」')
+
+def get_name(event):
+    if 'name' in event:
+        return event['name']
+    return 'Cat'
 
 def get_imeowge():
     _url = 'https://api.thecatapi.com/v1/images/search'
