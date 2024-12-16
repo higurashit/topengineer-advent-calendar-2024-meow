@@ -4,23 +4,26 @@ import os
 _env = os.environ
 
 def lambda_handler(event, context):
+    # 猫の名前を取得
     name = get_name(event)
 
     # 猫画像取得
     imeowge = get_imeowge()
 
-    # 誕生日メッセージ取得
+    # アドバイス取得
     admeowce = get_admeowce()
     admeowce_jp = get_admeowce_jp(admeowce)
     admeowce_jp = translate_meow(admeowce_jp)
 
+    # メッセージ
+    meowssage = f'{name}「{admeowce_jp} ({admeowce}) 」'
+
     # LINEに送信
-    post_admeowce_to_line(imeowge, f'{admeowce}\n{name}「{admeowce_jp}」')
+    post_admeowce_to_line(imeowge, meowssage)
 
 def get_name(event):
-    if 'name' in event:
-        return event['name']
-    return 'Cat'
+    default_cat_name = 'Cat'
+    return event.key('name', default_cat_name)
 
 def get_imeowge():
     _url = 'https://api.thecatapi.com/v1/images/search'
@@ -68,7 +71,6 @@ def translate_meow(text):
     return ret.rstrip("\n")
 
 def post_admeowce_to_line(imeowge, meowssage):
-    _msg = f'あなたにアドバイスをあげるにゃん。\n{meowssage}'
     _url = 'https://api.line.me/v2/bot/message/push'
     _data = json.dumps({
         "to": _env["LINE_USER_ID"]
@@ -82,7 +84,7 @@ def post_admeowce_to_line(imeowge, meowssage):
             # meowssage
             ,{
                 "type": "text"
-                ,"text": _msg
+                ,"text": meowssage
             }
         ]
     }).encode()
