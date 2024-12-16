@@ -33,7 +33,7 @@ Resources:
                 Provider: CodeStarSourceConnection
                 Version: 1
               Configuration:
-                ConnectionArn: !Sub arn:aws:codeconnections:${AWS::Region}:${AWS::AccountId}:connection/6a7eb867-8d4f-400e-b124-494d8874c175
+                ConnectionArn: !Sub arn:aws:codeconnections:us-east-1:${AWS::AccountId}:connection/866c95b8-75a9-4c3b-bec9-1f31ed5b9b31
                 FullRepositoryId: higurashit/topengineer-advent-calendar-2024-meow
                 BranchName: main
               OutputArtifacts:
@@ -199,7 +199,7 @@ Resources:
                     - '*'
               - Effect: Allow
                 Action: codestar-connections:*
-                Resource: !Sub arn:aws:codeconnections:${AWS::Region}:${AWS::AccountId}:connection/6a7eb867-8d4f-400e-b124-494d8874c175
+                Resource: !Sub arn:aws:codeconnections:us-east-1:${AWS::AccountId}:connection/866c95b8-75a9-4c3b-bec9-1f31ed5b9b31
               - Effect: Allow
                 Action: codebuild:*
                 Resource: !Sub arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/GetMeowAdvices*
@@ -223,9 +223,7 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service:
-                - codepipeline.amazonaws.com
-                - cloudformation.amazonaws.com
+              Service: cloudformation.amazonaws.com
       Path: /
       Policies:
         - PolicyName: GetMeowAdvicesAppPipelineCreateChangesetRolePolicy
@@ -245,11 +243,11 @@ Resources:
               - Effect: Allow
                 Action: ssm:GetParameters
                 Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/Test/*
-              # - Effect: Allow
-              #   Action: iam:*
-              #   Resource:
-              #     - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFMeowAdvice
-              #     - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFFindCatsGroup
+              - Effect: Allow
+                Action: iam:GetRole
+                Resource:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFMeowAdvice
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/IAMRoleLFFindCatsGroup
 
   # ExecuteChangesetRole
   ExecuteChangesetRole:
@@ -262,7 +260,7 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service: codepipeline.amazonaws.com
+              Service: cloudformation.amazonaws.com
       Path: /
       Policies:
         - PolicyName: GetMeowAdvicesAppPipelineExecuteChangesetRolePolicy
